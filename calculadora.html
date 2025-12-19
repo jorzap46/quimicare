@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Calculadora Química</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+            background: linear-gradient(135deg, #00C8FF, #EAF9FF);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+		kbd {
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      padding: 4px 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      display: inline-block;
+      margin: 2px;
+    }
+
+        h1 {
+            color: #00C8FF;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: clamp(1.6em, 4vw, 2.5em);
+            line-height: 1.15;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 12px 18px;
+            border: 2px solid #5521b5;
+            background: white;
+            color: #5521b5;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.95em;
+            min-height: 44px; /* mejor para móvil */
+        }
+
+        .mode-btn.active {
+            background: #00C8FF;
+            color: white;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(85, 33, 181, 0.3);
+        }
+
+        .valores-section {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .valores-title {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .help-icon {
+            width: 28px;
+            height: 28px;
+            background: #5521b5;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95em;
+            flex: 0 0 auto;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .input-group.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .label-unit {
+            font-size: 0.85em;
+            color: #888;
+            font-weight: normal;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px; /* evita zoom en iOS */
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #5521b5;
+            box-shadow: 0 0 0 3px rgba(85, 33, 181, 0.1);
+        }
+
+        input.has-value {
+            border-color: #4caf50;
+            background: #f1f8f4;
+        }
+
+        input.error {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .input-note {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        button {
+            padding: 15px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-height: 48px; /* mejor para móvil */
+        }
+         /* Botón VOLVER */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    transition: transform 0.15s ease;
+}
+
+.btn-volver .txt {
+    background: #00c8ff;
+    color: white;
+    padding: 10px 16px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.btn-volver .icon {
+    background: #000;
+    color: white;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.btn-volver:hover {
+    transform: scale(1.03);
+}
+
+.btn-volver:active {
+    transform: scale(0.97);
+}
+
+
+        .btn-calcular {
+            background: #4285f4;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .btn-calcular:hover:not(:disabled) {
+            background: #357ae8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        .btn-calcular:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-nuevo {
+            background: #009FC9;
+            color: white;
+        }
+
+        .btn-nuevo:hover {
+            background:#009FC9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-ejemplo {
+            background: #ffa726;
+            color: white;
+        }
+
+        .btn-ejemplo:hover {
+            background: #fb8c00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 167, 38, 0.3);
+        }
+
+        .resultado {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 4px solid #5521b5;
+            border-radius: 8px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .resultado h3 {
+            color: #5521b5;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .resultado-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .resultado-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .resultado-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .resultado-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            word-break: break-word;
+        }
+
+        .tipo-solucion {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.25em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .tipo-solucion.acido {
+            background: linear-gradient(135deg, #ff00ff 0%, #cc00cc 100%);
+            color: white;
+        }
+
+        .tipo-solucion.neutro {
+            background: linear-gradient(135deg, #9e9e9e 0%, #616161 100%);
+            color: white;
+        }
+
+        .tipo-solucion.basico {
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            color: white;
+        }
+
+        .interpretacion {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid #2196f3;
+        }
+
+        .interpretacion h4 {
+            color: #2196f3;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .interpretacion p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .escala-section {
+            margin-top: 25px;
+        }
+
+        .escala-title {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .escala-container {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        .escala {
+            display: flex;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .escala-segment {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.85);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            position: relative;
+            font-size: 0.85em;
+            padding: 0 6px;
+            text-align: center;
+        }
+
+        .marker {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 4px solid #333;
+            border-radius: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            font-size: 0.8em;
+        }
+
+        .escala-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding: 0 5px;
+            gap: 6px;
+            flex-wrap: wrap; /* móvil */
+        }
+
+        .escala-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.85em;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .ejemplos-comunes {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .ejemplos-comunes h4 {
+            color: #5521b5;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .ejemplo-item {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 14px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #ddd;
+            min-height: 40px;
+        }
+
+        .ejemplo-item:hover {
+            background: #5521b5;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .formula-reference {
+            background: #FCC6BB;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 3px solid #F54927;
+        }
+
+        .formula-reference h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 5px 0;
+            font-size: 0.92em;
+            color: #333;
+            overflow-x: auto;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid #c62828;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .container { padding: 18px; border-radius: 16px; }
+            .valores-section { padding: 14px; }
+            .input-grid { grid-template-columns: 1fr; }
+            .button-group { grid-template-columns: 1fr; }
+            .btn-calcular { grid-column: span 1; }
+            .resultado-grid { grid-template-columns: 1fr; }
+            .escala { height: 50px; }
+            .marker { width: 40px; height: 40px; border-width: 3px; }
+        }
+
+        @media (max-width: 480px) {
+            .subtitle { font-size: 0.88em; }
+            .mode-selector { flex-direction: column; }
+            .mode-btn { width: 100%; }
+            .escala-labels { justify-content: center; }
+            /* en pantallas muy pequeñas muestra etiquetas pares para que no se amontonen */
+            .escala-labels .escala-label:nth-child(odd) { display: none; }
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9em;
+            line-height: 1.35;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QuimiCare - Calculadora Química</h1>
+        <p class="subtitle">Calcula pH, pOH y concentraciones de forma profesional</p>
+        
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="cambiarModo('simple', event)">Modo Simple</button>
+            <button class="mode-btn" onclick="cambiarModo('concentracion', event)">Desde Concentración</button>
+            <button class="mode-btn" onclick="cambiarModo('dilucion', event)">Dilución</button>
+            <button class="mode-btn btn-volver" onclick="history.back()">
+			<span class="txt">VOLVER</span>
+			<span class="icon">&laquo;&laquo;</span>
+		</button>
+        </div>
+        
+        <div class="valores-section">
+            <div class="section-header">
+                <div class="valores-title">Ingrese los valores conocidos <p><kbd>Ingresa cualquier valor conocido y se calcularán automáticamente los demás</kbd></p></div>
+               
+            </div>
+            
+            <div id="formulario-simple">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="ph">pH <span class="label-unit">(0-14)</span></label>
+                        <input type="number" id="ph" step="0.01" min="0" max="14" placeholder="Ej: 7.00" oninput="validarInput(this)">
+                        <span class="input-note">Potencial de hidrógeno</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="poh">pOH <span class="label-unit">(0-14)</span></label>
+                        <input type="number" id="poh" step="0.01" min="0" max="14" placeholder="Ej: 7.00" oninput="validarInput(this)">
+                        <span class="input-note">Potencial hidroxilo</span>
+                    </div>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="h3o">[H3O+] <span class="label-unit">(mol/L)</span></label>
+                        <input type="number" id="h3o" step="any" placeholder="Ej: 1.0e-7" oninput="validarInput(this)">
+                        <span class="input-note">Concentración de iones hidronio</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="oh">[OH-] <span class="label-unit">(mol/L)</span></label>
+                        <input type="number" id="oh" step="any" placeholder="Ej: 1.0e-7" oninput="validarInput(this)">
+                        <span class="input-note">Concentración de iones hidroxilo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="formulario-concentracion" style="display: none;">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="concentracion">Concentración <span class="label-unit">(mol/L)</span></label>
+                        <input type="number" id="concentracion" step="any" placeholder="Ej: 0.1">
+                    </div>
+                    <div class="input-group">
+                        <label for="tipo-acido">Tipo de compuesto</label>
+                        <select id="tipo-acido">
+                            <option value="fuerte-acido">Ácido fuerte (HCl, HNO3)</option>
+                            <option value="fuerte-base">Base fuerte (NaOH, KOH)</option>
+                            <option value="debil">Ácido/Base débil</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-grid" id="ka-input" style="display: none;">
+                    <div class="input-group">
+                        <label for="ka">Ka o Kb <span class="label-unit">(constante)</span></label>
+                        <input type="number" id="ka" step="any" placeholder="Ej: 1.8e-5">
+                    </div>
+                </div>
+            </div>
+
+            <div id="formulario-dilucion" style="display: none;">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="c1">Concentración inicial (C1) <span class="label-unit">(mol/L)</span></label>
+                        <input type="number" id="c1" step="any" placeholder="Ej: 0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="v1">Volumen inicial (V1) <span class="label-unit">(mL)</span></label>
+                        <input type="number" id="v1" step="any" placeholder="Ej: 100">
+                    </div>
+                </div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="v2">Volumen final (V2) <span class="label-unit">(mL)</span></label>
+                        <input type="number" id="v2" step="any" placeholder="Ej: 500">
+                    </div>
+                    <div class="input-group">
+                        <label for="ph-inicial">pH de la solución</label>
+                        <input type="number" id="ph-inicial" step="0.01" placeholder="Ej: 2.00">
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-calcular" onclick="calcular()" id="btn-calcular">
+                    Calcular Valores
+                </button>
+                <button class="btn-nuevo" onclick="limpiar()">Limpiar</button>
+                <button class="btn-ejemplo" onclick="cargarEjemplo()">Ejemplo</button>
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+            <div id="resultado" class="resultado"></div>
+        </div>
+
+        <div class="escala-section">
+            <div class="escala-title">Escala de pH</div>
+            <div class="escala-container">
+                <div class="escala" id="escala">
+                    <div class="marker" id="marker">?</div>
+                </div>
+                <div class="escala-labels">
+                    <span class="escala-label">0</span>
+                    <span class="escala-label">1</span>
+                    <span class="escala-label">2</span>
+                    <span class="escala-label">3</span>
+                    <span class="escala-label">4</span>
+                    <span class="escala-label">5</span>
+                    <span class="escala-label">6</span>
+                    <span class="escala-label">7</span>
+                    <span class="escala-label">8</span>
+                    <span class="escala-label">9</span>
+                    <span class="escala-label">10</span>
+                    <span class="escala-label">11</span>
+                    <span class="escala-label">12</span>
+                    <span class="escala-label">13</span>
+                    <span class="escala-label">14</span>
+                </div>
+
+                <div class="ejemplos-comunes">
+                    <h4>Ejemplos comunes de pH:</h4>
+                    <span class="ejemplo-item" onclick="setEjemplo(1)">Ácido de batería (1)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(2)">Jugo de limón (2)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(3)">Vinagre (3)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(4.5)">Vino (4.5)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(5)">Café (5)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(6.5)">Leche (6.5)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(7)">Agua pura (7)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(8)">Agua de mar (8)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(9)">Bicarbonato (9)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(11)">Amoníaco (11)</span>
+                    <span class="ejemplo-item" onclick="setEjemplo(13)">Lejía (13)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="formula-reference">
+            <h4>Fórmulas de referencia</h4>
+            <div class="formula">pH + pOH = 14 (a 25 °C)</div>
+            <div class="formula">pH = -log[H3O+]</div>
+            <div class="formula">pOH = -log[OH-]</div>
+            <div class="formula">[H3O+] × [OH-] = Kw = 1.0 × 10^-14</div>
+            <div class="formula">C1·V1 = C2·V2 (dilución)</div>
+        </div>
+    </div>
+
+    <script>
+        let modoActual = 'simple';
+
+        // Crear la escala con colores y etiquetas
+        const escala = document.getElementById('escala');
+        const coloresYLabels = [
+            { color: '#D5006D', label: 'MUY ÁCIDO' },
+            { color: '#FF1493', label: '' },
+            { color: '#FF69B4', label: 'ÁCIDO' },
+            { color: '#FFC0CB', label: '' },
+            { color: '#FFB6C1', label: '' },
+            { color: '#DDA0DD', label: 'DÉBIL ÁCIDO' },
+            { color: '#DA70D6', label: '' },
+            { color: '#808080', label: 'NEUTRO' },
+            { color: '#90EE90', label: '' },
+            { color: '#7FFF00', label: 'DÉBIL BÁSICO' },
+            { color: '#32CD32', label: '' },
+            { color: '#00FF00', label: '' },
+            { color: '#00CC00', label: 'BÁSICO' },
+            { color: '#009900', label: '' },
+            { color: '#006400', label: 'MUY BÁSICO' }
+        ];
+
+        coloresYLabels.forEach((item) => {
+            const segment = document.createElement('div');
+            segment.className = 'escala-segment';
+            segment.style.background = item.color;
+            segment.textContent = item.label;
+            escala.appendChild(segment);
+        });
+
+        const marker = document.getElementById('marker');
+        escala.appendChild(marker);
+
+        function cambiarModo(modo, ev) {
+            modoActual = modo;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            if (ev && ev.target) ev.target.classList.add('active');
+
+            document.getElementById('formulario-simple').style.display = modo === 'simple' ? 'block' : 'none';
+            document.getElementById('formulario-concentracion').style.display = modo === 'concentracion' ? 'block' : 'none';
+            document.getElementById('formulario-dilucion').style.display = modo === 'dilucion' ? 'block' : 'none';
+
+            limpiar();
+        }
+
+        document.getElementById('tipo-acido').addEventListener('change', function() {
+            document.getElementById('ka-input').style.display = this.value === 'debil' ? 'block' : 'none';
+        });
+
+        function validarInput(input) {
+            const valor = parseFloat(input.value);
+            if (input.value === '') {
+                input.classList.remove('has-value', 'error');
+                return;
+            }
+
+            if (input.id === 'ph' || input.id === 'poh') {
+                if (valor < 0 || valor > 14 || isNaN(valor)) {
+                    input.classList.add('error');
+                    input.classList.remove('has-value');
+                } else {
+                    input.classList.add('has-value');
+                    input.classList.remove('error');
+                }
+            } else {
+                if (valor <= 0 || isNaN(valor)) {
+                    input.classList.add('error');
+                    input.classList.remove('has-value');
+                } else {
+                    input.classList.add('has-value');
+                    input.classList.remove('error');
+                }
+            }
+        }
+
+        function calcular() {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'none';
+
+            try {
+                if (modoActual === 'simple') {
+                    calcularSimple();
+                } else if (modoActual === 'concentracion') {
+                    calcularDesdeConcentracion();
+                } else if (modoActual === 'dilucion') {
+                    calcularDilucion();
+                }
+            } catch (error) {
+                mostrarError(error.message);
+            }
+        }
+
+        function calcularSimple() {
+            const ph = parseFloat(document.getElementById('ph').value);
+            const poh = parseFloat(document.getElementById('poh').value);
+            const h3o = parseFloat(document.getElementById('h3o').value);
+            const oh = parseFloat(document.getElementById('oh').value);
+
+            let phFinal, pohFinal, h3oFinal, ohFinal;
+
+            if (!isNaN(ph) && ph >= 0 && ph <= 14) {
+                phFinal = ph;
+                pohFinal = 14 - ph;
+                h3oFinal = Math.pow(10, -ph);
+                ohFinal = Math.pow(10, -pohFinal);
+            } else if (!isNaN(poh) && poh >= 0 && poh <= 14) {
+                pohFinal = poh;
+                phFinal = 14 - poh;
+                h3oFinal = Math.pow(10, -phFinal);
+                ohFinal = Math.pow(10, -pohFinal);
+            } else if (!isNaN(h3o) && h3o > 0) {
+                h3oFinal = h3o;
+                phFinal = -Math.log10(h3o);
+                pohFinal = 14 - phFinal;
+                ohFinal = Math.pow(10, -pohFinal);
+            } else if (!isNaN(oh) && oh > 0) {
+                ohFinal = oh;
+                pohFinal = -Math.log10(oh);
+                phFinal = 14 - pohFinal;
+                h3oFinal = Math.pow(10, -phFinal);
+            } else {
+                throw new Error('Por favor, ingrese al menos un valor válido');
+            }
+
+            if (phFinal < 0 || phFinal > 14) {
+                throw new Error('El pH debe estar entre 0 y 14');
+            }
+
+            actualizarInputs(phFinal, pohFinal, h3oFinal, ohFinal);
+            mostrarResultados(phFinal, pohFinal, h3oFinal, ohFinal);
+            actualizarMarcador(phFinal);
+        }
+
+        function calcularDesdeConcentracion() {
+            const conc = parseFloat(document.getElementById('concentracion').value);
+            const tipo = document.getElementById('tipo-acido').value;
+            const ka = parseFloat(document.getElementById('ka').value);
+
+            if (isNaN(conc) || conc <= 0) {
+                throw new Error('Ingrese una concentración válida');
+            }
+
+            let phFinal, h3oFinal;
+
+            if (tipo === 'fuerte-acido') {
+                h3oFinal = conc;
+                phFinal = -Math.log10(conc);
+            } else if (tipo === 'fuerte-base') {
+                const ohFinal = conc;
+                const pohFinal = -Math.log10(ohFinal);
+                phFinal = 14 - pohFinal;
+                h3oFinal = Math.pow(10, -phFinal);
+            } else if (tipo === 'debil') {
+                if (isNaN(ka) || ka <= 0) {
+                    throw new Error('Ingrese un valor de Ka o Kb válido para ácido/base débil');
+                }
+                h3oFinal = Math.sqrt(ka * conc);
+                phFinal = -Math.log10(h3oFinal);
+            }
+
+            const pohFinal = 14 - phFinal;
+            const ohFinal = Math.pow(10, -pohFinal);
+
+            actualizarInputs(phFinal, pohFinal, h3oFinal, ohFinal);
+            mostrarResultados(phFinal, pohFinal, h3oFinal, ohFinal, {tipo: 'concentracion', valor: conc, categoria: tipo});
+            actualizarMarcador(phFinal);
+        }
+
+        function calcularDilucion() {
+            const c1 = parseFloat(document.getElementById('c1').value);
+            const v1 = parseFloat(document.getElementById('v1').value);
+            const v2 = parseFloat(document.getElementById('v2').value);
+            const phInicial = parseFloat(document.getElementById('ph-inicial').value);
+
+            if (isNaN(c1) || isNaN(v1) || isNaN(v2) || isNaN(phInicial)) {
+                throw new Error('Complete todos los campos de dilución');
+            }
+
+            if (v2 <= v1) {
+                throw new Error('El volumen final debe ser mayor que el volumen inicial');
+            }
+
+            const c2 = (c1 * v1) / v2;
+            const factorDilucion = v2 / v1;
+            
+            const h3oInicial = Math.pow(10, -phInicial);
+            const h3oFinal = h3oInicial / factorDilucion;
+            const phFinal = -Math.log10(h3oFinal);
+            const pohFinal = 14 - phFinal;
+            const ohFinal = Math.pow(10, -pohFinal);
+
+            mostrarResultados(phFinal, pohFinal, h3oFinal, ohFinal, {
+                tipo: 'dilucion', 
+                c1: c1, 
+                c2: c2, 
+                v1: v1, 
+                v2: v2, 
+                factorDilucion: factorDilucion
+            });
+            actualizarMarcador(phFinal);
+        }
+
+        function actualizarInputs(ph, poh, h3o, oh) {
+            document.getElementById('ph').value = ph.toFixed(2);
+            document.getElementById('poh').value = poh.toFixed(2);
+            document.getElementById('h3o').value = h3o.toExponential(2);
+            document.getElementById('oh').value = oh.toExponential(2);
+
+            document.querySelectorAll('input').forEach(input => {
+                if (input.value) input.classList.add('has-value');
+            });
+        }
+
+        function mostrarResultados(ph, poh, h3o, oh, extra = null) {
+            let tipo = '';
+            let clasesTipo = '';
+            let interpretacion = '';
+
+            if (ph < 7) {
+                tipo = 'SOLUCIÓN ÁCIDA';
+                clasesTipo = 'acido';
+                if (ph < 3) {
+                    interpretacion = 'Solución fuertemente ácida. Alta concentración de iones H3O+. Puede ser corrosiva.';
+                } else if (ph < 5) {
+                    interpretacion = 'Solución moderadamente ácida. Similar al vinagre o jugo de limón.';
+                } else {
+                    interpretacion = 'Solución débilmente ácida. Similar al café o a una lluvia ácida leve.';
+                }
+            } else if (ph > 7) {
+                tipo = 'SOLUCIÓN BÁSICA';
+                clasesTipo = 'basico';
+                if (ph > 11) {
+                    interpretacion = 'Solución fuertemente básica. Alta concentración de iones OH-. Puede ser cáustica.';
+                } else if (ph > 9) {
+                    interpretacion = 'Solución moderadamente básica. Similar al amoníaco o bicarbonato de sodio.';
+                } else {
+                    interpretacion = 'Solución débilmente básica. Similar al agua de mar o antiácidos.';
+                }
+            } else {
+                tipo = 'SOLUCIÓN NEUTRA';
+                clasesTipo = 'neutro';
+                interpretacion = 'Solución neutra. Concentraciones iguales de H3O+ y OH-. Similar al agua pura a 25 °C.';
+            }
+
+            let resultadoHTML = `
+                <h3>Resultados del Cálculo</h3>
+                <div class="tipo-solucion ${clasesTipo}">
+                    ${tipo}
+                </div>
+                <div class="resultado-grid">
+                    <div class="resultado-item">
+                        <div class="resultado-label">pH</div>
+                        <div class="resultado-value">${ph.toFixed(2)}</div>
+                    </div>
+                    <div class="resultado-item">
+                        <div class="resultado-label">pOH</div>
+                        <div class="resultado-value">${poh.toFixed(2)}</div>
+                    </div>
+                    <div class="resultado-item">
+                        <div class="resultado-label">[H3O+]</div>
+                        <div class="resultado-value">${h3o.toExponential(2)} M</div>
+                    </div>
+                    <div class="resultado-item">
+                        <div class="resultado-label">[OH-]</div>
+                        <div class="resultado-value">${oh.toExponential(2)} M</div>
+                    </div>
+                </div>
+            `;
+
+            if (extra) {
+                if (extra.tipo === 'concentracion') {
+                    resultadoHTML += `
+                        <div class="interpretacion">
+                            <h4>Información adicional</h4>
+                            <p><strong>Concentración inicial:</strong> ${extra.valor} mol/L</p>
+                            <p><strong>Tipo:</strong> ${extra.categoria === 'fuerte-acido' ? 'Ácido fuerte' : extra.categoria === 'fuerte-base' ? 'Base fuerte' : 'Ácido/Base débil'}</p>
+                        </div>
+                    `;
+                } else if (extra.tipo === 'dilucion') {
+                    resultadoHTML += `
+                        <div class="interpretacion">
+                            <h4>Datos de dilución</h4>
+                            <p><strong>Concentración inicial (C1):</strong> ${extra.c1} mol/L</p>
+                            <p><strong>Concentración final (C2):</strong> ${extra.c2.toFixed(4)} mol/L</p>
+                            <p><strong>Factor de dilución:</strong> ${extra.factorDilucion.toFixed(2)}x</p>
+                            <p><strong>Volumen agregado:</strong> ${(extra.v2 - extra.v1).toFixed(2)} mL</p>
+                        </div>
+                    `;
+                }
+            }
+
+            resultadoHTML += `
+                <div class="interpretacion">
+                    <h4>Interpretación</h4>
+                    <p>${interpretacion}</p>
+                </div>
+            `;
+
+            document.getElementById('resultado').innerHTML = resultadoHTML;
+            document.getElementById('resultado').style.display = 'block';
+        }
+
+        function actualizarMarcador(ph) {
+            const marker = document.getElementById('marker');
+            const porcentaje = (ph / 14) * 100;
+            marker.style.left = porcentaje + '%';
+            marker.textContent = ph.toFixed(1);
+        }
+
+        function limpiar() {
+            document.querySelectorAll('input').forEach(input => {
+                input.value = '';
+                input.classList.remove('has-value', 'error');
+            });
+            document.getElementById('resultado').style.display = 'none';
+            document.getElementById('error-message').style.display = 'none';
+            
+            const marker = document.getElementById('marker');
+            marker.style.left = '50%';
+            marker.textContent = '?';
+        }
+
+        function cargarEjemplo() {
+            limpiar();
+            if (modoActual === 'simple') {
+                document.getElementById('ph').value = '3.5';
+                validarInput(document.getElementById('ph'));
+            } else if (modoActual === 'concentracion') {
+                document.getElementById('concentracion').value = '0.1';
+                document.getElementById('tipo-acido').value = 'fuerte-acido';
+            } else if (modoActual === 'dilucion') {
+                document.getElementById('c1').value = '1.0';
+                document.getElementById('v1').value = '50';
+                document.getElementById('v2').value = '250';
+                document.getElementById('ph-inicial').value = '1.0';
+            }
+        }
+
+        function setEjemplo(phValor) {
+            if (modoActual !== 'simple') {
+                cambiarModo('simple', null);
+                document.querySelectorAll('.mode-btn')[0].classList.add('active');
+            }
+            limpiar();
+            document.getElementById('ph').value = phValor;
+            validarInput(document.getElementById('ph'));
+            calcular();
+        }
+
+        function mostrarError(mensaje) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = '⚠️ ' + mensaje;
+            errorDiv.style.display = 'block';
+        }
+
+        // Posición inicial del marcador
+        actualizarMarcador(7);
+
+        // Añadir evento Enter para calcular
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calcular();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

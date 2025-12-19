@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Clínico-Químico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+            background: linear-gradient(135deg, #00C8FF, #EAF9FF);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 95%;
+            margin: 20px auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .status-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .status-item {
+            text-align: center;
+        }
+
+        .status-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .ph-normal { color: #4caf50; }
+        .ph-acidosis { color: #f44336; }
+        .ph-alkalosis { color: #2196f3; }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .range-group {
+            margin-bottom: 20px;
+        }
+
+        .range-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .range-label span:first-child {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .range-value {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+           /* -webkit-appearance: none;*/
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .body-visualization {
+            background: linear-gradient(180deg, #e3f2fd 0%, #fff3e0 100%);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .organ-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .organ-card h3 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .organ-info {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .organ-value {
+            color: #333;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .blood-ph {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .scenario-section {
+            margin-top: 25px;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .scenario-btn {
+            padding: 12px;
+            font-size: 0.95em;
+        }
+
+        .explanation-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .explanation-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .explanation-content {
+            color: #333;
+            line-height: 1.8;
+            font-size: 0.95em;
+            min-height: 80px;
+        }
+
+        .explanation-content p {
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeInText 0.5s forwards;
+        }
+
+        /* Botón VOLVER */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    transition: transform 0.15s ease;
+}
+
+.btn-volver .txt {
+    background: #00c8ff;
+    color: white;
+    padding: 10px 16px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.btn-volver .icon {
+    background: #000;
+    color: white;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.btn-volver:hover {
+    transform: scale(1.03);
+}
+
+.btn-volver:active {
+    transform: scale(0.97);
+}
+
+
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .status-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.4em;
+            }
+
+            .status-bar {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 15px;
+                gap: 12px;
+            }
+
+            .status-value {
+                font-size: 1.4em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .status-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QuimiCare - Simulador de Escenarios Clínico-Químicos</h1>
+            <button class="btn-volver" onclick="history.back()">
+			<span class="txt">VOLVER</span>
+			<span class="icon">&laquo;&laquo;</span>
+		</button>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-label">pH Sanguíneo</div>
+                <div class="status-value ph-normal" id="phValue">7.36</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">HCO₃⁻ (mEq/L)</div>
+                <div class="status-value" id="hco3Value">23</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">pCO₂ (mmHg)</div>
+                <div class="status-value" id="pco2Value">41</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Estado</div>
+                <div class="status-value" id="statusValue">Normal</div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div class="card">
+                <h2 style="text-decoration: underline;">Administración de Medicamentos</h2>
+                
+                <div class="control-group">
+                    <label>Tipo de Medicamento:</label>
+                    <select id="medType">
+                        <option value="none">-- Seleccionar --</option>
+                        <optgroup label="Medicamentos Ácidos">
+                            <option value="aspirin">Aspirina (ácido acetilsalicílico)</option>
+                            <option value="vitaminc">Vitamina C (ácido ascórbico)</option>
+                            <option value="hcl">Ácido Clorhídrico diluido</option>
+                        </optgroup>
+                        <optgroup label="Medicamentos Básicos">
+                            <option value="antacid">Antiácido (hidróxido de aluminio)</option>
+                            <option value="bicarbonate">Bicarbonato de Sodio</option>
+                            <option value="tris">TRIS (Trometamina)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Vía de Administración:</label>
+                    <select id="adminRoute">
+                        <option value="oral">Oral</option>
+                        <option value="iv">Intravenosa</option>
+                    </select>
+                </div>
+
+                <div class="range-group">
+                    <div class="range-label">
+                        <span>Dosis (mg):</span>
+                        <span class="range-value" id="doseDisplay">500</span>
+                    </div>
+                    <input type="range" id="dose" min="100" max="2000" value="500" step="100">
+                </div>
+
+                <button onclick="administerMedication()">Administrar Medicamento</button>
+
+                <h2 style="margin-top: 30px;">💧 Líquidos Intravenosos</h2>
+                
+                <div class="control-group">
+                    <label>Tipo de Líquido IV:</label>
+                    <select id="ivType">
+                        <option value="none">-- Seleccionar --</option>
+                        <option value="saline">Solución Salina 0.9%</option>
+                        <option value="ringer">Ringer Lactato</option>
+                        <option value="bicarb">Bicarbonato de Sodio 8.4%</option>
+                        <option value="dextrose">Dextrosa 5%</option>
+                    </select>
+                </div>
+
+                <div class="range-group">
+                    <div class="range-label">
+                        <span>Volumen (mL):</span>
+                        <span class="range-value" id="volumeDisplay">500</span>
+                    </div>
+                    <input type="range" id="volume" min="100" max="2000" value="500" step="100">
+                </div>
+
+                <button onclick="administerIV()">Administrar Líquido IV</button>
+
+                <div class="scenario-section">
+                    <h2>Escenarios Clínicos</h2>
+                    <div class="scenario-grid">
+                        <button class="scenario-btn" onclick="loadScenario('acidosis')">Acidosis Metabólica</button>
+                        <button class="scenario-btn" onclick="loadScenario('alkalosis')">Alcalosis Respiratoria</button>
+                        <button class="scenario-btn" onclick="loadScenario('diabetic')">Cetoacidosis Diabética</button>
+                        <button class="scenario-btn" onclick="resetSimulation()">Reiniciar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="text-decoration: underline;">Visualización del Cuerpo</h2>
+                <div class="body-visualization">
+                    <div class="organ-card">
+                        <h3>Pulmones</h3>
+                        <img src="imagenes/icon02.png" alt="">
+                        <div class="organ-info">Compensación Respiratoria</div>
+                        <div class="organ-value" id="respRate">FR: 16 rpm</div>
+                    </div>
+                    
+                    <div class="organ-card">
+                        <h3>Sangre</h3>
+                        <img src="imagenes/icon01.png" alt="">
+                        <div class="blood-ph ph-normal" id="bloodPh">pH 7.36</div>
+                        <div class="organ-value">HCO₃⁻: <span id="bloodHco3">23</span> mEq/L</div>
+                    </div>
+                    
+                    <div class="organ-card">
+                        <h3>Riñones</h3>
+                        <img src="imagenes/icon03.png" alt="">
+                        <div class="organ-info">Compensación Renal</div>
+                        <div class="organ-value" id="urineOutput">Excreción normal</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="explanation-box">
+            <h3>❓ ¿Qué está pasando?</h3>
+            <div id="explanationText" class="explanation-content"></div>
+        </div>
+    </div>
+
+    <script>
+        let state = {
+            pH: 7.36,
+            HCO3: 23,
+            pCO2: 41,
+            time: 0
+        };
+
+        let explanations = {
+            normal: [
+                "El cuerpo mantiene un equilibrio ácido-base perfecto.",
+                "El pH sanguíneo está en el rango normal (7.35-7.45).",
+                "Los sistemas buffer, respiratorio y renal trabajan en armonía.",
+                "No se requiere intervención médica en este momento."
+            ],
+            acidosis_metabolica: [
+                "Se detecta una acidosis metabólica.",
+                "El bicarbonato (HCO₃⁻) está disminuido, lo que reduce el pH.",
+                "Los pulmones intentan compensar aumentando la frecuencia respiratoria para eliminar CO₂.",
+                "Los riñones trabajan para retener bicarbonato y excretar más ácidos.",
+                "Considerar administración de bicarbonato de sodio IV si es severa."
+            ],
+            acidosis_respiratoria: [
+                "Se presenta una acidosis respiratoria.",
+                "El CO₂ está elevado debido a hipoventilación.",
+                "Los riñones compensan reteniendo bicarbonato (HCO₃⁻).",
+                "Es necesario mejorar la ventilación del paciente.",
+                "Puede requerir soporte ventilatorio."
+            ],
+            alcalosis_metabolica: [
+                "Se observa una alcalosis metabólica.",
+                "El bicarbonato (HCO₃⁻) está elevado, aumentando el pH.",
+                "Los pulmones compensan mediante hipoventilación para retener CO₂.",
+                "Puede deberse a vómitos excesivos o uso de diuréticos.",
+                "Considerar corrección de electrolitos y causas subyacentes."
+            ],
+            alcalosis_respiratoria: [
+                "Alcalosis respiratoria detectada.",
+                "Hay hiperventilación que elimina exceso de CO₂.",
+                "Los riñones compensan excretando más bicarbonato.",
+                "Puede ser causada por ansiedad, dolor o hipoxia.",
+                "Tratar la causa subyacente de la hiperventilación."
+            ],
+            cetoacidosis: [
+                "Estado de cetoacidosis diabética.",
+                "Producción excesiva de ácidos cetónicos.",
+                "El bicarbonato se consume neutralizando los ácidos.",
+                "Compensación respiratoria activa (respiración de Kussmaul).",
+                "Requiere insulina, hidratación y corrección de electrolitos urgente."
+            ]
+        };
+
+        function updateDisplay() {
+            document.getElementById('phValue').textContent = state.pH.toFixed(2);
+            document.getElementById('hco3Value').textContent = Math.round(state.HCO3);
+            document.getElementById('pco2Value').textContent = Math.round(state.pCO2);
+            document.getElementById('bloodPh').textContent = 'pH ' + state.pH.toFixed(2);
+            document.getElementById('bloodHco3').textContent = Math.round(state.HCO3);
+
+            const phElements = document.querySelectorAll('.ph-normal, .ph-acidosis, .ph-alkalosis');
+            phElements.forEach(el => {
+                el.classList.remove('ph-normal', 'ph-acidosis', 'ph-alkalosis');
+                if (state.pH < 7.35) el.classList.add('ph-acidosis');
+                else if (state.pH > 7.45) el.classList.add('ph-alkalosis');
+                else el.classList.add('ph-normal');
+            });
+
+            let status = 'Normal';
+            if (state.pH < 7.35) {
+                if (state.HCO3 < 22) status = 'Acidosis Metabólica';
+                else if (state.pCO2 > 45) status = 'Acidosis Respiratoria';
+            } else if (state.pH > 7.45) {
+                if (state.HCO3 > 26) status = 'Alcalosis Metabólica';
+                else if (state.pCO2 < 35) status = 'Alcalosis Respiratoria';
+            }
+
+            document.getElementById('statusValue').textContent = status;
+            updateCompensations();
+            updateExplanation();
+        }
+
+        function updateCompensations() {
+            let respRate = 16;
+            if (state.pH < 7.35) {
+                respRate = 20 + (7.35 - state.pH) * 40;
+            } else if (state.pH > 7.45) {
+                respRate = 16 - (state.pH - 7.45) * 20;
+            }
+            respRate = Math.max(8, Math.min(30, respRate));
+            document.getElementById('respRate').textContent = `FR: ${Math.round(respRate)} rpm`;
+
+            let urineMsg = 'Excreción normal';
+            if (state.pH < 7.35) {
+                urineMsg = '↑ Excreción de H⁺';
+            } else if (state.pH > 7.45) {
+                urineMsg = '↑ Excreción de HCO₃⁻';
+            }
+            document.getElementById('urineOutput').textContent = urineMsg;
+        }
+
+        function updateExplanation() {
+            let explanationType = 'normal';
+            
+            if (state.pH < 7.35) {
+                if (state.HCO3 < 22) {
+                    explanationType = 'acidosis_metabolica';
+                } else if (state.pCO2 > 45) {
+                    explanationType = 'acidosis_respiratoria';
+                }
+            } else if (state.pH > 7.45) {
+                if (state.HCO3 > 26) {
+                    explanationType = 'alcalosis_metabolica';
+                } else if (state.pCO2 < 35) {
+                    explanationType = 'alcalosis_respiratoria';
+                }
+            }
+
+            if (state.HCO3 < 15 && state.pH < 7.30) {
+                explanationType = 'cetoacidosis';
+            }
+
+            displayExplanationSequentially(explanations[explanationType]);
+        }
+
+        function displayExplanationSequentially(textArray) {
+            const container = document.getElementById('explanationText');
+            container.innerHTML = '';
+
+            textArray.forEach((text, index) => {
+                setTimeout(() => {
+                    const p = document.createElement('p');
+                    p.textContent = text;
+                    p.style.animationDelay = '0s';
+                    container.appendChild(p);
+                }, index * 800);
+            });
+        }
+
+        function calculatePH() {
+            const ratio = state.HCO3 / (0.03 * state.pCO2);
+            state.pH = 6.1 + Math.log10(ratio);
+            state.pH = Math.max(6.8, Math.min(7.8, state.pH));
+        }
+
+        function administerMedication() {
+            const medType = document.getElementById('medType').value;
+            const route = document.getElementById('adminRoute').value;
+            const dose = parseInt(document.getElementById('dose').value);
+
+            if (medType === 'none') {
+                alert('Por favor selecciona un medicamento');
+                return;
+            }
+
+            let deltaHCO3 = 0;
+            const routeMultiplier = route === 'iv' ? 1.5 : 1.0;
+
+            switch(medType) {
+                case 'aspirin':
+                    deltaHCO3 = -(dose / 500) * 2 * routeMultiplier;
+                    break;
+                case 'vitaminc':
+                    deltaHCO3 = -(dose / 500) * 1.5 * routeMultiplier;
+                    break;
+                case 'hcl':
+                    deltaHCO3 = -(dose / 500) * 3 * routeMultiplier;
+                    break;
+                case 'antacid':
+                    deltaHCO3 = (dose / 500) * 2 * routeMultiplier;
+                    break;
+                case 'bicarbonate':
+                    deltaHCO3 = (dose / 500) * 4 * routeMultiplier;
+                    break;
+                case 'tris':
+                    deltaHCO3 = (dose / 500) * 3 * routeMultiplier;
+                    break;
+            }
+
+            applyChanges(deltaHCO3, 0);
+        }
+
+        function administerIV() {
+            const ivType = document.getElementById('ivType').value;
+            const volume = parseInt(document.getElementById('volume').value);
+
+            if (ivType === 'none') {
+                alert('Por favor selecciona un líquido IV');
+                return;
+            }
+
+            let deltaHCO3 = 0;
+
+            switch(ivType) {
+                case 'saline':
+                    deltaHCO3 = -(volume / 1000) * 0.5;
+                    break;
+                case 'ringer':
+                    deltaHCO3 = (volume / 1000) * 2;
+                    break;
+                case 'bicarb':
+                    deltaHCO3 = (volume / 1000) * 6;
+                    break;
+                case 'dextrose':
+                    deltaHCO3 = (volume / 1000) * 0.3;
+                    break;
+            }
+
+            applyChanges(deltaHCO3, 0);
+        }
+
+        function applyChanges(deltaHCO3, deltaPCO2) {
+            state.HCO3 += deltaHCO3;
+            state.pCO2 += deltaPCO2;
+
+            state.HCO3 = Math.max(10, Math.min(40, state.HCO3));
+            state.pCO2 = Math.max(20, Math.min(80, state.pCO2));
+
+            calculatePH();
+
+            if (deltaHCO3 !== 0) {
+                const compensation = -deltaHCO3 * 0.5;
+                state.pCO2 += compensation;
+                state.pCO2 = Math.max(20, Math.min(80, state.pCO2));
+                calculatePH();
+            }
+
+            state.time += 1;
+            updateDisplay();
+        }
+
+        function loadScenario(scenario) {
+            switch(scenario) {
+                case 'acidosis':
+                    state.HCO3 = 15;
+                    state.pCO2 = 38;
+                    break;
+                case 'alkalosis':
+                    state.HCO3 = 24;
+                    state.pCO2 = 28;
+                    break;
+                case 'diabetic':
+                    state.HCO3 = 12;
+                    state.pCO2 = 25;
+                    break;
+            }
+
+            calculatePH();
+            state.time += 1;
+            updateDisplay();
+        }
+
+        function resetSimulation() {
+            state = {
+                pH: 7.36,
+                HCO3: 23,
+                pCO2: 41,
+                time: 0
+            };
+            updateDisplay();
+        }
+
+        document.getElementById('dose').addEventListener('input', function() {
+            document.getElementById('doseDisplay').textContent = this.value;
+        });
+
+        document.getElementById('volume').addEventListener('input', function() {
+            document.getElementById('volumeDisplay').textContent = this.value;
+        });
+
+        updateDisplay();
+    </script>
+</body>
+</html>

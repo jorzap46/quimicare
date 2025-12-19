@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acerca de</title>
+    <style>
+           * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+       background: linear-gradient(135deg, #00C8FF, #EAF9FF);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app-container {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px 18px 24px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 0 0 3px #1e90ff33;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 0 0 3px #1e90ff4d;
+       border:20px solid #0b7491;
+    }
+
+    .app-header {
+      text-align: center;
+    }
+
+    /*.app-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }*/
+	.fila-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    width: 100%;
+}
+
+/* Título */
+.app-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+	text-decoration:underline;
+}
+
+/* Botón VOLVER */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    transition: transform 0.15s ease;
+}
+
+.btn-volver .txt {
+   background: #00c8ff;
+    color: white;
+    padding: 10px 16px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.btn-volver .icon {
+    background: #000;
+    color: white;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.btn-volver:hover {
+    transform: scale(1.03);
+}
+
+.btn-volver:active {
+    transform: scale(0.97);
+}
+
+    .app-subtitle {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    p {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #333;
+      text-align: justify;
+    }
+    </style>
+</head>
+<body>
+  <div class="app-container">
+  <header class="app-header">
+    <div class="fila-header">
+    <div class="app-title">QuimiCare</div>
+	<button class="btn-volver" onclick="history.back()">
+			<span class="txt">VOLVER</span>
+			<span class="icon">&laquo;&laquo;</span>
+	</button>
+	</div>
+    <div class="app-subtitle">Acerca de esta aplicación</div>
+  </header>
+
+  <div class="risk-item active" data-key="preeclampsia">
+        <span class="badge"></span>
+        <p>
+        Este software denominado <strong>QuimiCare</strong> un software educativo 
+		(calculadora clínica) que permita a los estudiantes de salud comprender 
+		y aplicar los principios químicos del equilibrio ácido-base (pH, pOH, [H₃O⁺], [OH⁻]) 
+		a través de simulaciones clínicas, ejercicios interactivos y casos reales 
+		relacionados con la práctica profesional.
+        </p>
+  </div>
+  </div>
+</body>
+</html>

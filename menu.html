@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MaterSoft</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+           background: linear-gradient(135deg, #00C8FF, #EAF9FF);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .app-container {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 24px 20px 28px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 0 0 3px #1e90ff4d;
+             border:20px solid #0b7491;
+        }
+
+        .app-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .menu-item {
+            /*background: #f5f5f5;*/
+
+            border-radius: 14px;
+            padding: 10px;
+            cursor: pointer;
+            transition: transform .15s ease, box-shadow .15s ease, border .15s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+           /* border: 2px solid transparent;*/
+            border: 2px solid #ddd;
+        }
+		.fila-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    width: 100%;
+}
+
+/* Título */
+.app-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+	text-decoration:underline;
+}
+
+/* Botón VOLVER */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    transition: transform 0.15s ease;
+}
+
+.btn-volver .txt {
+    background: #00c8ff;
+    color: white;
+    padding: 10px 16px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.btn-volver .icon {
+    background: #000;
+    color: white;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.btn-volver:hover {
+    transform: scale(1.03);
+}
+
+.btn-volver:active {
+    transform: scale(0.97);
+}
+
+
+        
+        .menu-item--active {
+            border-color: #1e90ff;
+            box-shadow: 0 0 0 2px #1e90ff33;
+        }
+
+        .menu-item img {
+            width: 70%;
+            max-width: 140px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .menu-item span {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #222;
+        }
+
+        
+        .menu-item span.small {
+            font-size: 0.9rem;
+            line-height: 1.15;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 10px 16px 12px rgba(0, 0, 0, .12);
+        }
+
+        /* Responsivo: en pantallas pequeñas los botones en una sola columna */
+        @media (max-width: 600px) {
+            .app-container {
+                padding: 20px 14px 24px;
+                max-width: 360px;
+            }
+
+            .app-title {
+                font-size: 1.6rem;
+                margin-bottom: 16px;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-item img {
+                max-width: 120px;
+            }
+            .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 10px 16px 12px rgba(0, 0, 0, .12);
+        }
+        }
+		
+		@media (max-width: 480px) {
+    .fila-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="fila-header">
+		<h1 class="app-title">QuimiCare</h1>
+
+		<button class="btn-volver" onclick="history.back()">
+			<span class="txt">VOLVER</span>
+			<span class="icon">&laquo;&laquo;</span>
+		</button>
+    </div>
+
+    <div class="menu-grid">
+        <!-- Acerca de -->
+        <div class="menu-item menu-item--active" data-section="acerca">
+            <img src="imagenes/logo02.png" alt="Acerca de QuimiCare">
+            <span>Acerca de</span>
+        </div>
+
+        <!-- Calculadora -->
+        <div class="menu-item" data-section="calculadora">
+            <img src="imagenes/calc.png" alt="Calculadora">
+            <span>Calculadora</span>
+        </div>
+
+        <!-- Simulador -->
+        <div class="menu-item" data-section="simulador">
+            <img src="imagenes/simulador.png" alt="Simulador">
+            <span class="small">Simulador</span>
+        </div>
+
+        <!-- Signos de Alarma -->
+        <div class="menu-item" data-section="guias">
+            <img src="imagenes/guias.png" alt="Guias Clinicas">
+            <span class="small">Guías Clínicas</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ejemplo simple de interacción JS: muestra qué opción se pulsó.
+    const items = document.querySelectorAll('.menu-item');
+
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            const section = item.dataset.section;
+
+            // Aquí podrías redirigir a otra página o mostrar otra vista
+            // location.href = section + ".html";
+
+            //alert('Abrir sección: ' + section);
+			if(section=='calculadora')
+			     window.location='calculadora.html';
+			else if(section=='simulador')
+			     window.location='simulador.html';
+		    else if(section=='guias')
+			     window.location='guias.html';
+            else if(section=='acerca')
+                 window.location='acercade.html';
+			
+        });
+    });
+	
+</script>
+
+</body>
+</html>

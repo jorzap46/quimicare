@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuimiCare - Conceptos Clave</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+            background: linear-gradient(135deg, #00C8FF, #EAF9FF);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+            /*background: linear-gradient(100deg, #1e90ff33 0%, #764ba2 100%);*/
+            background: #0b7491;
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            padding: 30px;
+            min-width: 300px;
+            flex: 0 0 300px;
+        }
+
+        .sidebar h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .concept-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .concept-item.active {
+            background: #e0f2fe;
+            border-color: #667eea;
+        }
+
+        .concept-number {
+            background: linear-gradient(135deg, #00C8FF 0%, #764ba2 100%);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .concept-text {
+            font-size: 0.95rem;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            min-width: 300px;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-title {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .content-description {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+        }
+
+        .formula-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .formula {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .info-list {
+            margin: 20px 0;
+        }
+
+        .info-list li {
+            margin: 12px 0;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .info-list li:before {
+            /*content: "";*/
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #fef3c7 0%, #fde68a 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #555;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .context-box {
+            background: #dbeafe;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .context-box h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+        
+        /* Botón VOLVER */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    transition: transform 0.15s ease;
+}
+
+.btn-volver .txt {
+    background: #00c8ff;
+    color: white;
+    padding: 10px 16px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.btn-volver .icon {
+    background: #000;
+    color: white;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.btn-volver:hover {
+    transform: scale(1.03);
+}
+
+.btn-volver:active {
+    transform: scale(0.97);
+}
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                flex: 1;
+                min-width: 100%;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .content-title {
+                font-size: 1.8rem;
+            }
+
+            .formula {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function showContent(index) {
+            // Remover clase active de todos los items
+            const items = document.querySelectorAll('.concept-item');
+            items.forEach(item => item.classList.remove('active'));
+            
+            // Remover clase active de todas las secciones
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Agregar clase active al item seleccionado
+            items[index].classList.add('active');
+            
+            // Agregar clase active a la sección correspondiente
+            sections[index].classList.add('active');
+        }
+    </script>
+    <div class="container">
+        <div class="header">
+            <h1>QuimiCare - Conceptos Clave</h1>
+            <!--<button class="back-btn" onclick="window.history.back()">« VOLVER</button>-->
+            <button class="btn-volver" onclick="history.back()">
+			<span class="txt">VOLVER</span>
+			<span class="icon">&laquo;&laquo;</span>
+		</button>
+
+        </div>
+
+        <div class="content-wrapper">
+            <div class="sidebar">
+                <h2>Seleccione un concepto:</h2>
+                <div class="concept-item active" onclick="showContent(0)">
+                    <div class="concept-number">1</div>
+                    <div class="concept-text">pH</div>
+                </div>
+                <div class="concept-item" onclick="showContent(1)">
+                    <div class="concept-number">2</div>
+                    <div class="concept-text">Concentración de iones hidrógeno [H⁺]</div>
+                </div>
+                <div class="concept-item" onclick="showContent(2)">
+                    <div class="concept-number">3</div>
+                    <div class="concept-text">Ácidos y bases (fuertes y débiles)</div>
+                </div>
+                <div class="concept-item" onclick="showContent(3)">
+                    <div class="concept-number">4</div>
+                    <div class="concept-text">Sistemas amortiguadores (buffers)</div>
+                </div>
+                <div class="concept-item" onclick="showContent(4)">
+                    <div class="concept-number">5</div>
+                    <div class="concept-text">Relación ácido/base en soluciones biológicas</div>
+                </div>
+                <div class="concept-item" onclick="showContent(5)">
+                    <div class="concept-number">6</div>
+                    <div class="concept-text">Acidosis metabólica</div>
+                </div>
+                <div class="concept-item" onclick="showContent(6)">
+                    <div class="concept-number">7</div>
+                    <div class="concept-text">Desequilibrios electrolíticos</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="content-section active">
+                    <h1 class="content-title">pH</h1>
+                    <p class="content-description">
+                        El pH (potencial de hidrógeno) es una medida logarítmica que expresa la concentración de iones hidrógeno [H⁺] presentes en una solución acuosa.
+                    </p>
+                    <p class="content-description">
+                        Desde el punto de vista químico se define como:
+                    </p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">pH = −log₁₀[H⁺]</div>
+                        <div style="text-align: center; color: #666; margin-top: 10px;">
+                            Donde:
+                        </div>
+                        <ul class="info-list">
+                            <li>[H⁺] se expresa en moles por litro (mol/L)</li>
+                            <li>Un pH bajo indica mayor acidez (mayor concentración de H⁺)</li>
+                            <li>Un pH alto indica mayor alcalinidad (menor concentración de H⁺)</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>Dato importante:</strong> Debido a su naturaleza logarítmica, una variación de 1 unidad de pH implica un cambio de 10 veces en la concentración de H⁺, lo que explica la alta sensibilidad de los seres vivos a pequeñas variaciones del pH.
+                    </div>
+
+                    <p class="content-description">
+                        La escala de pH es logarítmica y convencionalmente se extiende de 0 a 14, aunque en sistemas biológicos suele mantenerse en rangos estrechos.
+                    </p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rango de pH</th>
+                                    <th>Clasificación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>0 – 6.9</td>
+                                    <td>Medio ácido</td>
+                                </tr>
+                                <tr>
+                                    <td>7.0</td>
+                                    <td>Neutro</td>
+                                </tr>
+                                <tr>
+                                    <td>7.1 – 14</td>
+                                    <td>Medio alcalino</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="context-box">
+                        <h3>En el contexto fisiológico humano:</h3>
+                        <ul class="info-list">
+                            <li>Sangre arterial normal: 7.35 - 7.45</li>
+                            <li>pH venoso: ligeramente menor</li>
+                            <li>pH gástrico: 1.5 – 3.5</li>
+                            <li>pH urinario: 4.5 – 8.0 (variable)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h1 class="content-title">Concentración de iones hidrógeno [H⁺]</h1>
+                    <p class="content-description">
+                        La concentración de iones hidrógeno [H⁺] es la cantidad de protones libres presentes en una solución, expresada típicamente en moles por litro (mol/L) o en notación científica.
+                    </p>
+                    
+                    <div class="formula-box">
+                        <p style="text-align: center; color: #555; margin-bottom: 15px;">
+                            Esta concentración determina directamente el pH de la solución mediante la relación:
+                        </p>
+                        <div class="formula">[H⁺] = 10⁻ᵖᴴ</div>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>Concepto clave:</strong> Una mayor concentración de [H⁺] significa mayor acidez y pH más bajo. Por el contrario, menor [H⁺] indica mayor alcalinidad y pH más alto.
+                    </div>
+
+                    <p class="content-description">
+                        En sistemas biológicos, pequeñas variaciones en [H⁺] pueden tener efectos significativos en:
+                    </p>
+                    <ul class="info-list">
+                        <li>La estructura y función de proteínas y enzimas</li>
+                        <li>La permeabilidad de membranas celulares</li>
+                        <li>Los procesos metabólicos celulares</li>
+                        <li>El equilibrio ácido-base del organismo</li>
+                    </ul>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>pH</th>
+                                    <th>[H⁺] (mol/L)</th>
+                                    <th>Condición</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>7.0</td>
+                                    <td>1 × 10⁻⁷</td>
+                                    <td>Neutro</td>
+                                </tr>
+                                <tr>
+                                    <td>7.4</td>
+                                    <td>4 × 10⁻⁸</td>
+                                    <td>Sangre normal</td>
+                                </tr>
+                                <tr>
+                                    <td>1.0</td>
+                                    <td>1 × 10⁻¹</td>
+                                    <td>Muy ácido</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h1 class="content-title">Ácidos y bases (fuertes y débiles)</h1>
+                    <p class="content-description">
+                        Los ácidos y bases se clasifican según su capacidad de disociación en solución acuosa.
+                    </p>
+                    
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Ácidos Fuertes</h3>
+                        <p style="color: #555; line-height: 1.8;">
+                            Se disocian completamente en solución, liberando todos sus iones H⁺. Ejemplos: HCl (ácido clorhídrico), H₂SO₄ (ácido sulfúrico), HNO₃ (ácido nítrico).
+                        </p>
+                    </div>
+
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Ácidos Débiles</h3>
+                        <p style="color: #555; line-height: 1.8;">
+                            Se disocian parcialmente en solución, estableciendo un equilibrio entre la forma disociada e intacta. Ejemplos: CH₃COOH (ácido acético), H₂CO₃ (ácido carbónico).
+                        </p>
+                    </div>
+
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Bases Fuertes</h3>
+                        <p style="color: #555; line-height: 1.8;">
+                            Se disocian completamente, liberando iones OH⁻. Ejemplos: NaOH (hidróxido de sodio), KOH (hidróxido de potasio).
+                        </p>
+                    </div>
+
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Bases Débiles</h3>
+                        <p style="color: #555; line-height: 1.8;">
+                            Se disocian parcialmente. Ejemplos: NH₃ (amoníaco), HCO₃⁻ (bicarbonato).
+                        </p>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>Importancia biológica:</strong> La mayoría de los ácidos y bases en sistemas biológicos son débiles, lo que permite mantener el equilibrio del pH mediante sistemas amortiguadores.
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h1 class="content-title">Sistemas amortiguadores (buffers)</h1>
+                    <p class="content-description">
+                        Los sistemas amortiguadores o buffers son soluciones que resisten cambios en el pH cuando se añaden pequeñas cantidades de ácido o base.
+                    </p>
+                    
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Composición</h3>
+                        <p style="color: #555; line-height: 1.8;">
+                            Un buffer está compuesto típicamente por un ácido débil y su base conjugada (o una base débil y su ácido conjugado).
+                        </p>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>Mecanismo de acción:</strong> Cuando se añade un ácido, la base conjugada del buffer lo neutraliza. Cuando se añade una base, el ácido débil del buffer la neutraliza, manteniendo el pH relativamente constante.
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 30px 0 20px 0; font-size: 1.5rem;">Principales sistemas buffer en el cuerpo humano:</h3>
+                    
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">1. Sistema bicarbonato-ácido carbónico</h3>
+                        <div class="formula" style="font-size: 1.2rem;">H₂CO₃ ⇌ HCO₃⁻ + H⁺</div>
+                        <p style="color: #555; margin-top: 15px; line-height: 1.8;">
+                            Es el buffer extracelular más importante. Regula el pH sanguíneo en 7.35-7.45.
+                        </p>
+                    </div>
+
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">2. Sistema fosfato</h3>
+                        <div class="formula" style="font-size: 1.2rem;">H₂PO₄⁻ ⇌ HPO₄²⁻ + H⁺</div>
+                        <p style="color: #555; margin-top: 15px; line-height: 1.8;">
+                            Importante en el líquido intracelular y en la orina.
+                        </p>
+                    </div>
+
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">3. Sistema proteínas</h3>
+                        <p style="color: #555; line-height: 1.8;">
+                            Las proteínas plasmáticas y la hemoglobina actúan como buffers debido a sus grupos amino y carboxilo.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h1 class="content-title">Relación ácido/base en soluciones biológicas</h1>
+                    <p class="content-description">
+                        La relación entre ácidos y bases en soluciones biológicas determina el pH y la capacidad amortiguadora del sistema. Esta relación está descrita por la ecuación de Henderson-Hasselbalch.
+                    </p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">pH = pKa + log([A⁻]/[HA])</div>
+                        <div style="text-align: center; color: #666; margin-top: 15px;">
+                            Donde:
+                        </div>
+                        <ul class="info-list">
+                            <li>pKa = constante de disociación ácida</li>
+                            <li>[A⁻] = concentración de la base conjugada</li>
+                            <li>[HA] = concentración del ácido débil</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>Principio fundamental:</strong> El pH de una solución buffer depende de la relación entre la concentración de la base conjugada y el ácido débil. Cuando [A⁻] = [HA], entonces pH = pKa.
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 30px 0 20px 0; font-size: 1.5rem;">Aplicación en el sistema bicarbonato:</h3>
+                    
+                    <div class="formula-box">
+                        <div class="formula">pH = 6.1 + log([HCO₃⁻]/[H₂CO₃])</div>
+                        <p style="color: #555; margin-top: 15px; line-height: 1.8;">
+                            En condiciones normales, la relación [HCO₃⁻]/[H₂CO₃] es aproximadamente 20:1, lo que mantiene el pH sanguíneo en 7.4.
+                        </p>
+                    </div>
+
+                    <ul class="info-list">
+                        <li>Si aumenta [HCO₃⁻] → pH aumenta (alcalosis)</li>
+                        <li>Si aumenta [H₂CO₃] → pH disminuye (acidosis)</li>
+                        <li>El cuerpo ajusta esta relación mediante la respiración (CO₂) y la función renal (HCO₃⁻)</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h1 class="content-title">Acidosis metabólica</h1>
+                    <p class="content-description">
+                        La acidosis metabólica es un trastorno del equilibrio ácido-base caracterizado por una disminución del pH sanguíneo (< 7.35) debido a la acumulación de ácidos o pérdida de bicarbonato.
+                    </p>
+                    
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Características principales</h3>
+                        <ul class="info-list">
+                            <li>pH sanguíneo < 7.35</li>
+                            <li>Disminución de bicarbonato [HCO₃⁻] < 22 mEq/L</li>
+                            <li>pCO₂ puede estar disminuido por compensación respiratoria</li>
+                        </ul>
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 30px 0 20px 0; font-size: 1.5rem;">Causas comunes:</h3>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Ejemplos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Aumento de producción de ácidos</td>
+                                    <td>Cetoacidosis diabética, acidosis láctica</td>
+                                </tr>
+                                <tr>
+                                    <td>Pérdida de bicarbonato</td>
+                                    <td>Diarrea severa, fístulas intestinales</td>
+                                </tr>
+                                <tr>
+                                    <td>Disminución de excreción renal de ácidos</td>
+                                    <td>Insuficiencia renal</td>
+                                </tr>
+                                <tr>
+                                    <td>Ingestión de ácidos</td>
+                                    <td>Intoxicación por metanol, etilenglicol</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>Compensación:</strong> El cuerpo intenta compensar mediante hiperventilación (respiración de Kussmaul) para eliminar CO₂ y aumentar el pH. Los riñones también aumentan la excreción de H⁺ y la reabsorción de HCO₃⁻.
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 30px 0 20px 0; font-size: 1.5rem;">Manifestaciones clínicas:</h3>
+                    <ul class="info-list">
+                        <li>Respiración rápida y profunda (Kussmaul)</li>
+                        <li>Fatiga y debilidad muscular</li>
+                        <li>Confusión y deterioro del estado mental</li>
+                        <li>Náuseas y vómitos</li>
+                        <li>Arritmias cardíacas en casos severos</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h1 class="content-title">Desequilibrios electrolíticos</h1>
+                    <p class="content-description">
+                        Los desequilibrios electrolíticos son alteraciones en las concentraciones de iones (electrolitos) en el organismo, que pueden afectar funciones vitales como la conducción nerviosa, contracción muscular y balance hídrico.
+                    </p>
+                    
+                    <h3 style="color: #667eea; margin: 30px 0 20px 0; font-size: 1.5rem;">Principales electrolitos y sus alteraciones:</h3>
+                    
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Sodio (Na⁺)</h3>
+                        <p style="color: #555; margin-bottom: 10px;"><strong>Rango normal:</strong> 135-145 mEq/L</p>
+                        <p style="color: #555; line-height: 1.8;">
+                            <strong>Hiponatremia</strong> (< 135 mEq/L): Confusión, convulsiones, edema cerebral<br>
+                            <strong>Hipernatremia</strong> (> 145 mEq/L): Sed intensa, alteración mental, convulsiones
+                        </p>
+                    </div>
+
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Potasio (K⁺)</h3>
+                        <p style="color: #555; margin-bottom: 10px;"><strong>Rango normal:</strong> 3.5-5.0 mEq/L</p>
+                        <p style="color: #555; line-height: 1.8;">
+                            <strong>Hipopotasemia</strong> (< 3.5 mEq/L): Debilidad muscular, arritmias cardíacas<br>
+                            <strong>Hiperpotasemia</strong> (> 5.0 mEq/L): Arritmias peligrosas, paro cardíaco
+                        </p>
+                    </div>
+
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Calcio (Ca²⁺)</h3>
+                        <p style="color: #555; margin-bottom: 10px;"><strong>Rango normal:</strong> 8.5-10.5 mg/dL</p>
+                        <p style="color: #555; line-height: 1.8;">
+                            <strong>Hipocalcemia</strong>: Tetania, espasmos musculares, convulsiones<br>
+                            <strong>Hipercalcemia</strong>: Fatiga, confusión, arritmias
+                        </p>
+                    </div>
+
+                    <div class="formula-box">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Magnesio (Mg²⁺)</h3>
+                        <p style="color: #555; margin-bottom: 10px;"><strong>Rango normal:</strong> 1.5-2.5 mEq/L</p>
+                        <p style="color: #555; line-height: 1.8;">
+                            <strong>Hipomagnesemia</strong>: Temblores, arritmias, debilidad<br>
+                            <strong
