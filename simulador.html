@@ -378,6 +378,18 @@
                 font-size: 1.2em;
             }
         }
+		
+		/*------*/
+		.btn-reiniciar {
+            background: #ffa726;
+            color: white;
+        }
+
+        .btn-reiniciar:hover {
+            background: #fb8c00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 167, 38, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -448,10 +460,10 @@
 
                 <button onclick="administerMedication()">Administrar Medicamento</button>
 
-                <h2 style="margin-top: 30px;">💧 Líquidos Intravenosos</h2>
+                <h2 style="margin-top: 30px;">Líquidos Intravenosos</h2>
                 
                 <div class="control-group">
-                    <label>Tipo de Líquido IV:</label>
+                    <label>Tipo de Líquido Intravenoso:</label>
                     <select id="ivType">
                         <option value="none">-- Seleccionar --</option>
                         <option value="saline">Solución Salina 0.9%</option>
@@ -469,7 +481,7 @@
                     <input type="range" id="volume" min="100" max="2000" value="500" step="100">
                 </div>
 
-                <button onclick="administerIV()">Administrar Líquido IV</button>
+                <button onclick="administerIV()">Administrar Líquido Intravenoso</button>
 
                 <div class="scenario-section">
                     <h2>Escenarios Clínicos</h2>
@@ -477,7 +489,7 @@
                         <button class="scenario-btn" onclick="loadScenario('acidosis')">Acidosis Metabólica</button>
                         <button class="scenario-btn" onclick="loadScenario('alkalosis')">Alcalosis Respiratoria</button>
                         <button class="scenario-btn" onclick="loadScenario('diabetic')">Cetoacidosis Diabética</button>
-                        <button class="scenario-btn" onclick="resetSimulation()">Reiniciar</button>
+                        <button class="btn-reiniciar" onclick="resetSimulation()">Reiniciar</button>
                     </div>
                 </div>
             </div>
@@ -774,6 +786,7 @@
                 time: 0
             };
             updateDisplay();
+			actualizarCombos();
         }
 
         document.getElementById('dose').addEventListener('input', function() {
@@ -785,6 +798,20 @@
         });
 
         updateDisplay();
+		
+		function actualizarCombos()
+		{
+		   const combo1=document.getElementById('medType');
+		   const combo2=document.getElementById('adminRoute');
+		   const combo3=document.getElementById('ivType');
+		   combo1.selectedIndex = 0;
+		   combo2.selectedIndex = 0;
+		   combo3.selectedIndex = 0;
+		   document.getElementById("dose").value = 500;
+		   document.getElementById("volume").value = 500;
+		   document.getElementById('doseDisplay').textContent = '500';
+           document.getElementById('volumeDisplay').textContent = '500';
+		}
     </script>
 </body>
 </html>

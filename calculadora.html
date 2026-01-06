@@ -575,7 +575,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>QuimiCare - Calculadora Química</h1>
+        <h1>OK*QuimiCare - Calculadora Química</h1>
         <p class="subtitle">Calcula pH, pOH y concentraciones de forma profesional</p>
         
         <div class="mode-selector">
@@ -611,13 +611,13 @@
 
                 <div class="input-grid">
                     <div class="input-group">
-                        <label for="h3o">[H3O+] <span class="label-unit">(mol/L)</span></label>
+                        <label for="h3o">[H₃O⁺] <span class="label-unit">(mol/L)</span></label>
                         <input type="number" id="h3o" step="any" placeholder="Ej: 1.0e-7" oninput="validarInput(this)">
                         <span class="input-note">Concentración de iones hidronio</span>
                     </div>
                     
                     <div class="input-group">
-                        <label for="oh">[OH-] <span class="label-unit">(mol/L)</span></label>
+                        <label for="oh">[OH⁻] <span class="label-unit">(mol/L)</span></label>
                         <input type="number" id="oh" step="any" placeholder="Ej: 1.0e-7" oninput="validarInput(this)">
                         <span class="input-note">Concentración de iones hidroxilo</span>
                     </div>
@@ -633,7 +633,7 @@
                     <div class="input-group">
                         <label for="tipo-acido">Tipo de compuesto</label>
                         <select id="tipo-acido">
-                            <option value="fuerte-acido">Ácido fuerte (HCl, HNO3)</option>
+                            <option value="fuerte-acido">Ácido fuerte (HCl, HNO₃)</option>
                             <option value="fuerte-base">Base fuerte (NaOH, KOH)</option>
                             <option value="debil">Ácido/Base débil</option>
                         </select>
@@ -650,17 +650,17 @@
             <div id="formulario-dilucion" style="display: none;">
                 <div class="input-grid">
                     <div class="input-group">
-                        <label for="c1">Concentración inicial (C1) <span class="label-unit">(mol/L)</span></label>
+                        <label for="c1">Concentración inicial (C₁) <span class="label-unit">(mol/L)</span></label>
                         <input type="number" id="c1" step="any" placeholder="Ej: 0.5">
                     </div>
                     <div class="input-group">
-                        <label for="v1">Volumen inicial (V1) <span class="label-unit">(mL)</span></label>
+                        <label for="v1">Volumen inicial (V₁) <span class="label-unit">(mL)</span></label>
                         <input type="number" id="v1" step="any" placeholder="Ej: 100">
                     </div>
                 </div>
                 <div class="input-grid">
                     <div class="input-group">
-                        <label for="v2">Volumen final (V2) <span class="label-unit">(mL)</span></label>
+                        <label for="v2">Volumen final (V₂) <span class="label-unit">(mL)</span></label>
                         <input type="number" id="v2" step="any" placeholder="Ej: 500">
                     </div>
                     <div class="input-group">
@@ -726,10 +726,10 @@
         <div class="formula-reference">
             <h4>Fórmulas de referencia</h4>
             <div class="formula">pH + pOH = 14 (a 25 °C)</div>
-            <div class="formula">pH = -log[H3O+]</div>
-            <div class="formula">pOH = -log[OH-]</div>
-            <div class="formula">[H3O+] × [OH-] = Kw = 1.0 × 10^-14</div>
-            <div class="formula">C1·V1 = C2·V2 (dilución)</div>
+            <div class="formula">pH = -log[H₃O⁺]</div>
+            <div class="formula">pOH = -log[OH⁻]</div>
+            <div class="formula">[H₃O⁺] × [OH⁻] = Kw = 1.0 × 10^-14</div>
+            <div class="formula">C₁·V₁ = C₂·V₂ (dilución)</div>
         </div>
     </div>
 
@@ -956,7 +956,7 @@
                 tipo = 'SOLUCIÓN ÁCIDA';
                 clasesTipo = 'acido';
                 if (ph < 3) {
-                    interpretacion = 'Solución fuertemente ácida. Alta concentración de iones H3O+. Puede ser corrosiva.';
+                    interpretacion = 'Solución fuertemente ácida. Alta concentración de iones [H₃O⁺]. Puede ser corrosiva.';
                 } else if (ph < 5) {
                     interpretacion = 'Solución moderadamente ácida. Similar al vinagre o jugo de limón.';
                 } else {
@@ -966,7 +966,7 @@
                 tipo = 'SOLUCIÓN BÁSICA';
                 clasesTipo = 'basico';
                 if (ph > 11) {
-                    interpretacion = 'Solución fuertemente básica. Alta concentración de iones OH-. Puede ser cáustica.';
+                    interpretacion = 'Solución fuertemente básica. Alta concentración de iones [OH⁻]. Puede ser cáustica.';
                 } else if (ph > 9) {
                     interpretacion = 'Solución moderadamente básica. Similar al amoníaco o bicarbonato de sodio.';
                 } else {
@@ -975,7 +975,7 @@
             } else {
                 tipo = 'SOLUCIÓN NEUTRA';
                 clasesTipo = 'neutro';
-                interpretacion = 'Solución neutra. Concentraciones iguales de H3O+ y OH-. Similar al agua pura a 25 °C.';
+                interpretacion = 'Solución neutra. Concentraciones iguales de [H₃O⁺] y [OH⁻]. Similar al agua pura a 25 °C.';
             }
 
             let resultadoHTML = `
@@ -993,11 +993,11 @@
                         <div class="resultado-value">${poh.toFixed(2)}</div>
                     </div>
                     <div class="resultado-item">
-                        <div class="resultado-label">[H3O+]</div>
+                        <div class="resultado-label">[H₃O⁺]</div>
                         <div class="resultado-value">${h3o.toExponential(2)} M</div>
                     </div>
                     <div class="resultado-item">
-                        <div class="resultado-label">[OH-]</div>
+                        <div class="resultado-label">[OH⁻]</div>
                         <div class="resultado-value">${oh.toExponential(2)} M</div>
                     </div>
                 </div>
@@ -1016,8 +1016,8 @@
                     resultadoHTML += `
                         <div class="interpretacion">
                             <h4>Datos de dilución</h4>
-                            <p><strong>Concentración inicial (C1):</strong> ${extra.c1} mol/L</p>
-                            <p><strong>Concentración final (C2):</strong> ${extra.c2.toFixed(4)} mol/L</p>
+                            <p><strong>Concentración inicial (C₁):</strong> ${extra.c1} mol/L</p>
+                            <p><strong>Concentración final (C₂):</strong> ${extra.c2.toFixed(4)} mol/L</p>
                             <p><strong>Factor de dilución:</strong> ${extra.factorDilucion.toFixed(2)}x</p>
                             <p><strong>Volumen agregado:</strong> ${(extra.v2 - extra.v1).toFixed(2)} mL</p>
                         </div>
